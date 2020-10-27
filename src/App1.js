@@ -23,21 +23,9 @@ state={
 
 componentDidMount(){
     this.loadGifs();
-    this.scrollListener = window.addEventListener('scroll',(e)=>{
-        this.handleScroll(e)
-    })
+    
 }
-handleScroll=(e)=>
-{
-    const {scrolling, totalPages ,paginate}=this.state
-    if(scrolling) return
-    if(totalPages <= paginate) return
-    const lastLi =document.querySelector('ul.gifs>li:last-cild')
-    const lastLiOfsset= lastLi.offsetTop + lastLi.clientHeight
-    const pageOffset =window.pageYOffset+window.innerHeight
-    var bottomOffset =20
-    if(pageOffset>lastLiOfsset-bottomOffset) this.loadMore()
-}
+
 
 loadGifs = ()=> 
 {
@@ -131,12 +119,20 @@ render () {
 if(!this.state.gifs.data) {
     return null
   } else {
-return <div>
+return <Modal className="ui grid container">
         <input type="text"
        onChange={this.onChangeValue}
         ></input>
-            <GifList gifs={this.state.gifs.data}/>
+        <InfiniteScroll
+              loadMore={this.loadMore}
+              pageStart={this.state.paginate}>
+        <div className="ui grid">
+        <GifList  gifs={this.state.gifs.data}/>
+
         </div>
+    
+        </InfiniteScroll>
+        </Modal>
       
 }
 }
