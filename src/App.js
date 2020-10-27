@@ -1,26 +1,44 @@
-import React from 'react';
-import logo from './logo.svg';
+import React,{useState} from 'react';
+import GifList from './GifList';
+import SearchBar from './SearchBar';
+import request from 'superagent';
+import Modal from './modal';
 import './App.css';
+import InfiniteScroll from 'react-infinite-scroller';
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
-}
+
+const App =() =>
+{
+  const [gifs,setGifs]= useState([]);
+        
+    
+  const loadItems=(page) =>{
+    handleTermChange();
+  }
+
+    const handleTermChange=(term)=> {
+        const url = `http://api.giphy.com/v1/gifs/search?q=${term.replace(/\s/g, '+')}&api_key=ybaPDWvW02i61gblWgdFkxkrsfhsZzhi`;
+
+        request.get(url, (err, res) => {
+          setGifs( res.body.data)
+        });
+    }
+  
+
+  
+        return (
+          <Modal>
+                <SearchBar onTermChange={handleTermChange} />
+
+            <InfiniteScroll  
+              pageStart={1}
+                loadMore={handleTermChange}>
+                <GifList gifs={gifs} />
+                </InfiniteScroll>
+                </Modal>
+
+        );
+    }
+
 
 export default App;

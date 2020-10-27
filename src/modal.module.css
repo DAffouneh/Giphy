@@ -1,0 +1,13 @@
+.Modal {
+    box-sizing: border-box;
+	position: relative;
+	padding: 10px;
+	border: 1px solid #f1f1f1;
+	border-radius: 4px;
+	background: white;
+	width: 300px;
+	height: 300px;
+    z-index: 100;
+    overflow: hidden;
+}
+
