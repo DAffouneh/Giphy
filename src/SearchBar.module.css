@@ -1,0 +1,30 @@
+.Button {
+  height: 34px;
+  width: 60px;
+  background-color: #8e7dce;
+  border: 0;
+  color: white;
+}
+Button:focus {
+  outline: none;
+}
+
+.Input {
+  width: 442px;
+  height: 32px;
+  border: 0;
+  border-bottom: 1px solid #b2b2b2;
+  margin-bottom: 10px;
+  margin-right: 20px;
+}
+Input:focus {
+  outline: none;
+}
+
+.Div {
+  display: flex;
+  flex-direction: row;
+  margin-bottom: 0;
+  margin-left: 10px;
+  padding: 0;
+}
