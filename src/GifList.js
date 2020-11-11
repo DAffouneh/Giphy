@@ -2,6 +2,7 @@ import React from "react";
 import GifItem from "./GifItem";
 const GifList = ({ gifs }) => {
   const gifItems = gifs.map((gif) => {
+    
     return (
       <div key={gif.id}>
         <GifItem gif={gif} />

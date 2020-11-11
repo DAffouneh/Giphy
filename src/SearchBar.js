@@ -1,10 +1,27 @@
 import React, { useState } from "react";
 import classes from "./SearchBar.module.css";
+
+const WAIT_INTERVAL = 1000
+
 const SearchBar = (props) => {
   const [term, setTerm] = useState("Tap to search...");
+
+let timer = null;
+
   const changeHandel = (event) => {
     setTerm(event.target.value);
+
+    clearTimeout(timer)
+
+
+    timer = setTimeout(triggerChange, WAIT_INTERVAL)
+
   };
+  const triggerChange = () => {
+    props.clickSearchHandeler(term);
+
+  }
+
   const clickHandel = (event) => {
     event.preventDefault();
     props.clickSearchHandeler(term);
@@ -19,11 +36,11 @@ const SearchBar = (props) => {
         onChange={changeHandel}
       ></input>
 
-      <div>
+      {/* <div>
         <button className={classes.Button} onClick={clickHandel}>
           Search
         </button>
-      </div>
+      </div> */}
     </div>
   );
 };

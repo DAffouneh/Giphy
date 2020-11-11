@@ -1,14 +1,13 @@
 import React, { useState, useEffect } from "react";
 import Modal from "./modal";
 import SearchBar from "./SearchBar";
-import axios from "axios";
 import GifList from "./GifList";
 import InfiniteScroll from "react-infinite-scroll-component";
 import Spinner from "./Spinner";
 import Gif from "./gif.png";
 import classes from "./App.module.css";
 const App = () => {
-  const [paginate, setPaginate] = useState(1);
+  const [paginate, setPaginate] = useState(0);
   const [limit, setLimit] = useState(6);
   const [gifs, setGifs] = useState([]);
   const [term, setTerm] = useState("");
@@ -16,11 +15,33 @@ const App = () => {
 
   useEffect(() => {
     loadGifs();
-  }, []);
+  }, [term]);
 
   const loadGifs = (termFromSearchBar) => {
+    setGifs([]);
     setTerm(termFromSearchBar);
-    console.log(term);
+    fetch(
+      `https://api.giphy.com/v1/gifs/search?q=${term}&limit=${limit}&offset=${paginate}&api_key=ybaPDWvW02i61gblWgdFkxkrsfhsZzhi`
+    )
+      .then((res) => res.json())
+      .then((json) => {
+        if (json.error) {
+          alert("Error");
+
+        } else {
+
+          setGifs([...json.data]);
+          console.log(gifs)
+        }
+      });
+   setPaginate(paginate + 1);
+    console.log("GIF"+paginate);
+  };
+
+  const loadMore = () => {
+    // setTimeout(() => {
+    //   loadGifs(term);
+    // }, 1500);
     fetch(
       `https://api.giphy.com/v1/gifs/search?q=${term}&limit=${limit}&offset=${paginate}&api_key=ybaPDWvW02i61gblWgdFkxkrsfhsZzhi`
     )
@@ -29,18 +50,11 @@ const App = () => {
         if (json.error) {
           alert("Error");
         } else {
-          console.log(json);
-          setGifs([...gifs, ...json.data]);
+          setGifs([...gifs,...json.data]);
         }
       });
     setPaginate(paginate + 1);
     console.log(paginate);
-  };
-
-  const loadMore = () => {
-    setTimeout(() => {
-      loadGifs(term);
-    }, 1500);
   };
 
   const ModalShow = () => {
@@ -59,10 +73,10 @@ const App = () => {
         <InfiniteScroll
           dataLength={gifs.length}
           next={loadMore}
-          height={"200px"}
+          height={"250px"}
           hasMore={true}
           loader={spinner}
-          scrollThreshold={0.8}
+          scrollThreshold={0.6}
           className={classes.Scroll}
         >
           <GifList gifs={[...gifs]} />
