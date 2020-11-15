@@ -6,9 +6,6 @@ import Spinner from "./Spinner";
 import Gif from "./gif.png";
 import classes from "./App.module.css";
 
-const WAIT_INTERVAL = 300;
-const ENTER_KEY = 13;
-
 const App = () => {
   const [paginate, setPaginate] = useState(0);
   const [limit] = useState(6);
