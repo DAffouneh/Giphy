@@ -9,6 +9,7 @@
     "axios": "^0.21.0",
     "bootstrap-modal": "^2.2.4",
     "config": "^3.3.2",
+    "qs": "^6.9.4",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
     "react-infinite-scroll-component": "^5.1.0",

@@ -1,29 +1,18 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import classes from "./SearchBar.module.css";
-
-const WAIT_INTERVAL = 1000
-
+const WAIT_INTERVAL = 500;
 const SearchBar = (props) => {
+  let timer = null;
   const [term, setTerm] = useState("Tap to search...");
 
-let timer = null;
-
-  const changeHandel = (event) => {
+  const onSearchChange = (event) => {
+    event.stopPropagation();
+    clearTimeout(timer);
     setTerm(event.target.value);
-
-    clearTimeout(timer)
-
-
-    timer = setTimeout(triggerChange, WAIT_INTERVAL)
-
+    timer = setTimeout(triggerChange, WAIT_INTERVAL);
   };
+
   const triggerChange = () => {
-    props.clickSearchHandeler(term);
-
-  }
-
-  const clickHandel = (event) => {
-    event.preventDefault();
     props.clickSearchHandeler(term);
   };
 
@@ -33,14 +22,8 @@ let timer = null;
         className={classes.Input}
         type="text"
         placeholder={term}
-        onChange={changeHandel}
+        onChange={onSearchChange}
       ></input>
-
-      {/* <div>
-        <button className={classes.Button} onClick={clickHandel}>
-          Search
-        </button>
-      </div> */}
     </div>
   );
 };
