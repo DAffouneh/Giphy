@@ -5,48 +5,39 @@ import InfiniteScroll from "react-infinite-scroll-component";
 import Spinner from "./Spinner";
 import Gif from "./gif.png";
 import classes from "./App.module.css";
+var GphApiClient = require("giphy-js-sdk-core");
 
 const App = () => {
   const [paginate, setPaginate] = useState(0);
-  const [limit] = useState(6);
   const [gifs, setGifs] = useState([]);
   const [term, setTerm] = useState("");
   const [show, setShow] = useState(false);
-
+  const [giphy] = useState(GphApiClient("ybaPDWvW02i61gblWgdFkxkrsfhsZzhi"));
   useEffect(() => {
-    loadGifs();
-  }, [term]);
+    loadFeed();
+  }, []);
 
-  const loadGifs = (termFromSearchBar) => {
-    setGifs([]);
-    setTerm(termFromSearchBar);
-    fetch(
-      `https://api.giphy.com/v1/gifs/search?q=${term}&offset=${paginate}&api_key=ybaPDWvW02i61gblWgdFkxkrsfhsZzhi`
-    )
-      .then((res) => res.json())
-      .then((json) => {
-        if (json.error) {
-          alert("Error");
-        } else {
-          setGifs([...json.data]);
-        }
-      });
+  const loadFeed = () => {
+    giphy.trending();
+    giphy.trending("gifs", { offset: paginate }).then((response) => {
+      setGifs([]);
+      setGifs(response.data);
+    });
   };
 
   const loadMore = () => {
     setPaginate(paginate + 6);
+    loadFeed();
+  };
 
-    fetch(
-      `https://api.giphy.com/v1/gifs/search?q=${term}&limit=${limit}&offset=${paginate}&api_key=ybaPDWvW02i61gblWgdFkxkrsfhsZzhi`
-    )
-      .then((res) => res.json())
-      .then((json) => {
-        if (json.error) {
-          alert("Error");
-        } else {
-          setGifs([...gifs, ...json.data]);
-        }
-      });
+  const search = (event) => {
+    event.preventDefault();
+    setTerm(event.target.value);
+    if (term === "") return;
+
+    giphy.search("gifs", { q: term }).then((response) => {
+      setGifs(response.data);
+    });
   };
 
   const ModalShow = () => {
@@ -59,10 +50,13 @@ const App = () => {
 
   const onSearchChange = (event) => {
     event.stopPropagation();
-    setTerm(event.target.value);
-    loadGifs(term);
+    updateQuery(event);
   };
 
+  const updateQuery = (event) => {
+    setTerm(event.target.value);
+    search(event);
+  };
   const spinner = <Spinner></Spinner>;
   return (
     <div className={classes.OuterDiv}>
